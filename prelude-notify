@@ -19,8 +19,8 @@
 # along with this program; see the file COPYING.  If not, write to
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import PreludeEasy
-from PreludeEasy import ClientEasy, ConnectionPool, Connection, IDMEF
+import prelude
+from prelude import ClientEasy, ConnectionPool, Connection, IDMEF
 import gobject, gtk, pynotify
 
 from PreludeNotify import ManagerConnection, notifyaction, pnstatusicon, pnconfig, threshold, x11idle, heartbeat
@@ -64,17 +64,17 @@ def _expire_cb(item):
     else:
         cstr = ""
 
-    src = cstr + (idmef.Get("alert.source(0).node.address(0).address") or "(unknown)")
-    cl = idmef.Get("alert.classification.text") or "(unknown)"
+    src = cstr + (idmef.get("alert.source(0).node.address(0).address") or "(unknown)")
+    cl = idmef.get("alert.classification.text") or "(unknown)"
 
-    desc = idmef.Get("alert.assessment.impact.description")
+    desc = idmef.get("alert.assessment.impact.description")
 
     if desc:
         desc = "<b>" + cl + "</b>\n" + desc
     else:
         desc = cl
 
-    env.notify.run(idmef.Get("alert.assessment.impact.severity"), item.messageid, src, desc)
+    env.notify.run(idmef.get("alert.assessment.impact.severity"), item.messageid, src, desc)
 
 
 env.expire_cb = _expire_cb
@@ -83,7 +83,7 @@ env.thresholding = threshold.Threshold(env.config.get("general","threshold_timeo
 
 filter = env.config.get("idmef", "filter")
 if filter != "":
-        env.criteria = PreludeEasy.IDMEFCriteria(filter)
+        env.criteria = prelude.IDMEFCriteria(filter)
 else:
         env.criteria = None
 

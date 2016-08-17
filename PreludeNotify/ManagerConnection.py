@@ -17,10 +17,10 @@
 # along with this program; see the file COPYING.  If not, write to
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from PreludeEasy import ClientEasy, Connection, PreludeError
+from prelude import ClientEasy, Connection, PreludeError
 from PreludeNotify import ErrorDialog
 
-import PreludeEasy
+import prelude
 import gobject
 import os
 
@@ -50,12 +50,12 @@ class SingleConnection:
         def _io_cb(self, fd, cond, con):
                 if cond & gobject.IO_IN:
                         try:
-                                idmef = con.RecvIDMEF()
+                                idmef = con.recvIDMEF()
                         except PreludeError, err:
                                 self.handleDisconnect(con, str(err))
                                 return False
 
-                        if idmef.Get("heartbeat.create_time"):
+                        if idmef.get("heartbeat.create_time"):
                                 self.env.hbmonitor.heartbeat(idmef)
 
                         elif self.env.criteria is None or self.env.criteria.Match(idmef):
@@ -69,29 +69,29 @@ class SingleConnection:
 
         def doConnect(self):
                 try:
-                        self._con.Connect(self._client, ClientEasy.IDMEF_READ)
+                        self._con.connect(self._client, ClientEasy.IDMEF_READ)
 
                 except PreludeError, err:
                         ErrorDialog.ErrorDialog(str(err))
                         return True
 
-                self._iow = gobject.io_add_watch(self._con.GetFd(), gobject.IO_IN|gobject.IO_PRI|gobject.IO_HUP|gobject.IO_NVAL|gobject.IO_ERR, self._io_cb, self._con)
-                self.env.notify.run(None, None, "Manager Connection successfull", "With Prelude-Manager <b>%s</b>" % self._con.GetPeerAddr())
+                self._iow = gobject.io_add_watch(self._con.getFd(), gobject.IO_IN|gobject.IO_PRI|gobject.IO_HUP|gobject.IO_NVAL|gobject.IO_ERR, self._io_cb, self._con)
+                self.env.notify.run(None, None, "Manager Connection successfull", "With Prelude-Manager <b>%s</b>" % self._con.getPeerAddr())
 
                 return False
 
         def handleDisconnect(self, err=""):
                 if err:
                         err = ": " + err
-                self.env.notify.run("high", None, "Manager Connection interrupted", "With Prelude-Manager <b>%s</b>%s" % (self._con.GetPeerAddr(), err))
+                self.env.notify.run("high", None, "Manager Connection interrupted", "With Prelude-Manager <b>%s</b>%s" % (self._con.getPeerAddr(), err))
                 self._timeout = gobject.timeout_add(10000, self.doConnect)
 
 
 class Session:
         def __init__(self, env, profile):
                 self.env = env
-                self.client = PreludeEasy.ClientEasy(profile, PreludeEasy.Client.IDMEF_READ)
-                self.client.SetFlags(0)
+                self.client = prelude.ClientEasy(profile, prelude.Client.IDMEF_READ)
+                self.client.setFlags(0)
                 self._con_list = {}
 
         def addAddress(self, addr):

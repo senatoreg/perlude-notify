@@ -42,13 +42,13 @@ class Threshold:
         item.key = key
         item.count = 1
         item.idmef = idmef
-        item.messageid = [ idmef.Get("alert.messageid") ]
+        item.messageid = [ idmef.get("alert.messageid") ]
         self._setTimer(item)
 
     def _updateEntry(self, key, idmef):
         item = self._limited[key]
         item.count = item.count + 1
-        item.messageid.append(idmef.Get("alert.messageid"))
+        item.messageid.append(idmef.get("alert.messageid"))
 
         gobject.source_remove(item.timer)
         self._setTimer(item)
@@ -60,7 +60,7 @@ class Threshold:
         rl = []
 
         for i in self._limit_path:
-            rl += [idmef.Get(i)]
+            rl += [idmef.get(i)]
 
         key = str(rl)
         if self._limited.has_key(key):

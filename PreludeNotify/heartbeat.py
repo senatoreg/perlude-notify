@@ -23,15 +23,15 @@ import pynotify
 
 class HeartbeatSource:
         def _update_fields(self, idmef):
-                self._heartbeat_interval = idmef.Get("heartbeat.heartbeat_interval")
+                self._heartbeat_interval = idmef.get("heartbeat.heartbeat_interval")
                 self._last = time.time()
 
-                self._name = idmef.Get("heartbeat.analyzer(-1).name")
-                self._model = idmef.Get("heartbeat.analyzer(-1).model")
-                self._analyzerid = idmef.Get("heartbeat.analyzer(-1).analyzerid")
-                self._node_name = idmef.Get("heartbeat.analyzer(-1).node.name")
-                self._node_location = idmef.Get("heartbeat.analyzer(-1).node.location")
-                self._node_addresses = idmef.Get("heartbeat.analyzer(-1).node.address(*).address")
+                self._name = idmef.get("heartbeat.analyzer(-1).name")
+                self._model = idmef.get("heartbeat.analyzer(-1).model")
+                self._analyzerid = idmef.get("heartbeat.analyzer(-1).analyzerid")
+                self._node_name = idmef.get("heartbeat.analyzer(-1).node.name")
+                self._node_location = idmef.get("heartbeat.analyzer(-1).node.location")
+                self._node_addresses = idmef.get("heartbeat.analyzer(-1).node.address(*).address")
 
 
         def __init__(self, env, idmef):
@@ -89,7 +89,7 @@ class HeartbeatMonitor:
                 self._table = {}
 
         def heartbeat(self, idmef):
-            analyzerid = idmef.Get("heartbeat.analyzer(-1).analyzerid")
+            analyzerid = idmef.get("heartbeat.analyzer(-1).analyzerid")
 
             if self._table.has_key(analyzerid):
                 self._table[analyzerid].update(idmef)

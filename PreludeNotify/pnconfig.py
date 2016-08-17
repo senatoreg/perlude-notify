@@ -19,7 +19,7 @@
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
-import PreludeEasy
+import prelude
 import ErrorDialog
 from ManagerConnection import Session
 from PreludeNotify import siteconfig
@@ -91,8 +91,8 @@ class PnConfig(SafeConfigParser):
                 if self._updated.has_key("filter") :
                         if self._updated["filter"] != "":
                                 try:
-                                        self.env.criteria = PreludeEasy.IDMEFCriteria(self._updated["filter"][3])
-                                except PreludeEasy.PreludeError, e:
+                                        self.env.criteria = prelude.IDMEFCriteria(self._updated["filter"][3])
+                                except prelude.PreludeError, e:
                                         ErrorDialog.ErrorDialog(str(e))
                                         self.set(self._updated["filter"][1], self._updated["filter"][2], self._updated["filter"][0])
                                         raise
